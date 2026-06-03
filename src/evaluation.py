@@ -1,11 +1,15 @@
 def precision_at_k(
-    recommendations,
-    actual_category
+    recommended,
+    relevant,
+    k=5
 ):
 
-    relevant = (
-        recommendations["Category"]
-        == actual_category
-    ).sum()
+    recommended = recommended[:k]
 
-    return relevant / len(recommendations)
+    hit = len(
+        set(recommended)
+        &
+        set(relevant)
+    )
+
+    return hit / k

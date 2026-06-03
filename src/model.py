@@ -1,7 +1,6 @@
-import pandas as pd
-
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import pandas as pd
 
 
 def build_model(df):
@@ -19,20 +18,21 @@ def build_model(df):
         tfidf_matrix
     )
 
-    return cosine_sim
-
-
-def get_recommendations(
-    place_name,
-    df,
-    cosine_sim,
-    top_n=5
-):
-
     indices = pd.Series(
         df.index,
         index=df["Place_Name"]
     ).drop_duplicates()
+
+    return cosine_sim, indices
+
+
+def get_recommendations(
+    place_name,
+    cosine_sim,
+    indices,
+    df,
+    top_n=5
+):
 
     idx = indices[place_name]
 
@@ -53,13 +53,13 @@ def get_recommendations(
         for i in sim_scores
     ]
 
-    return df.iloc[
+    result = df.iloc[
         place_indices
-    ][
-        [
-            "Place_Name",
-            "Category",
-            "City",
-            "Rating"
-        ]
+    ].copy()
+
+    result["Similarity"] = [
+        i[1]
+        for i in sim_scores
     ]
+
+    return result
