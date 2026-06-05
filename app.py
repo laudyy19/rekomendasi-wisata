@@ -27,19 +27,20 @@ st.set_page_config(
     layout="wide"
 )
 
-# =========================
-# CSS
-# =========================
-
 st.markdown(
     f"""
 <style>
 
-html, body, [class*="css"], .stApp, .main, .block-container,
+html, body, [class*="css"], .stApp,
+.main, .block-container,
 [data-testid="stAppViewContainer"],
 [data-testid="stHeader"] {{
     background-color:{PALETTE['bg']} !important;
     color:{PALETTE['text']} !important;
+}}
+
+.block-container {{
+    padding-top: 1.5rem;
 }}
 
 section[data-testid="stSidebar"],
@@ -55,7 +56,7 @@ section[data-testid="stSidebar"] > div {{
 [data-testid="metric-container"] {{
     background-color:{PALETTE['card']} !important;
     border-radius:12px;
-    padding:10px;
+    padding:12px;
 }}
 
 .hero {{
@@ -64,7 +65,6 @@ section[data-testid="stSidebar"] > div {{
         {PALETTE['primary']},
         {PALETTE['secondary']}
     );
-
     border-radius:16px;
     padding:2rem;
     margin-bottom:1.5rem;
@@ -72,6 +72,7 @@ section[data-testid="stSidebar"] > div {{
 
 .hero h1 {{
     color:white !important;
+    margin-bottom:0.5rem;
 }}
 
 .hero p {{
@@ -81,9 +82,31 @@ section[data-testid="stSidebar"] > div {{
 .rec-card {{
     background:{PALETTE['card']};
     border-radius:12px;
-    padding:1rem;
-    margin-bottom:1rem;
+    padding:14px 18px;
+    margin-bottom:10px;
     border-left:5px solid {PALETTE['primary']};
+}}
+
+.rank {{
+    font-size:20px;
+    font-weight:700;
+    color:{PALETTE['primary']};
+}}
+
+.place-name {{
+    font-size:18px;
+    font-weight:600;
+    color:{PALETTE['text']};
+}}
+
+.sim-score {{
+    font-size:22px;
+    font-weight:700;
+}}
+
+.sim-label {{
+    font-size:12px;
+    color:{PALETTE['muted']};
 }}
 
 .badge {{
@@ -91,6 +114,7 @@ section[data-testid="stSidebar"] > div {{
     padding:4px 10px;
     border-radius:999px;
     margin-right:5px;
+    margin-top:4px;
     font-size:12px;
 }}
 
@@ -283,7 +307,7 @@ for rank, row in enumerate(
     start=1
 ):
 
-    score = row.Similarity
+    score = float(row.Similarity)
 
     persen = int(score * 100)
 
@@ -304,9 +328,30 @@ for rank, row in enumerate(
         f"""
 <div class="rec-card">
 
-<b>#{rank} {row.Place_Name}</b>
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+">
 
-<br><br>
+<div>
+
+<div style="
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:8px;
+">
+
+<span class="rank">
+#{rank}
+</span>
+
+<span class="place-name">
+{row.Place_Name}
+</span>
+
+</div>
 
 <span class="badge cat">
 {row.Category}
@@ -324,11 +369,24 @@ for rank, row in enumerate(
 {price}
 </span>
 
-<br><br>
+</div>
 
-<b style="color:{color}">
-Similarity : {score:.4f}
-</b>
+<div style="text-align:right">
+
+<div
+class="sim-score"
+style="color:{color}"
+>
+{score:.4f}
+</div>
+
+<div class="sim-label">
+similarity
+</div>
+
+</div>
+
+</div>
 
 <div class="bar-wrap">
 <div
@@ -348,5 +406,5 @@ background:{color};
 st.markdown("---")
 
 st.caption(
-    "Sistem Rekomendasi Wisata Indonesia • Content Based Filtering • TF-IDF • Cosine Similarity"
+    "Sistem Rekomendasi Destinasi Wisata Indonesia Menggunakan Content Based Filtering"
 )
